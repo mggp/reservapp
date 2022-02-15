@@ -68,3 +68,8 @@ incluida en el repositorio git.
 Es necesario facilitar una url a la prueba funcionando. Antes de revisar el código
 comprobaremos la funcionalidad de la prueba en esa url. Puedes utilizar cualquier servicio
 gratuito como pythonanywhere, heroku, etc
+
+# Desarrollo
+## Requerimientos
+- Python 3.9.5
+- Django 3.0.14
