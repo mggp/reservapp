@@ -1,7 +1,6 @@
-{% extends "bookings/base.html" %}
+{% extends "bookings/list.html" %}
 
-{% block content %}
-<div class="row mb-3 justify-content-between align-items-center">
+{% block list_controls %}
     <div class="col-6 col-md-3">
         <div class="input-group">
             <span class="input-group-text bi-search mr-2 "></span>
@@ -12,28 +11,27 @@
         <button type="button" class="btn btn-primary">
             Nueva reserva
         </button>
-    </div>    
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Localizador</th>
-            <th scope="col">Check-in</th>
-            <th scope="col">Habitación</th>
-            <th scope="col">Datos de contacto</th>
-            <th scope="col"></th> {% comment %} This is the actions column {% endcomment %}
-        </tr>
-    </thead>
+    </div>
+{% endblock list_controls %}
 
-    <tbody>
-        <tr>
-            {% for booking in booking_list %}
-            <td>{{booking.code}}</td>
-            <td>{{booking.start_date | date:'d m y' }}</td>
-            <td>{{booking.room}}</td>
-            <td>{{booking.contact_info.name}}
-            {% endfor %}
-        </tr>
-    </tbody>
-</table>
-{% endblock content %}
+{% block list_head_row %}
+<tr class="justify-content-between">
+    <th scope="col">Localizador</th>
+    <th scope="col">Check-in</th>
+    <th scope="col">Habitación</th>
+    <th scope="col">Datos de contacto</th>
+    <th scope="col"></th> {% comment %} This is the actions column {% endcomment %}
+</tr>
+{% endblock list_head_row %}
+
+
+{% block list_body %}
+<tr>
+    {% for booking in booking_list %}
+    <td>{{booking.code}}</td>
+    <td>{{booking.start_date | date:'d m y' }}</td>
+    <td>{{booking.room}}</td>
+    <td>{{booking.contact_info.name}}
+    {% endfor %}
+</tr>
+{% endblock list_body %}

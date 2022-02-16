@@ -1,0 +1,20 @@
+{% extends "bookings/base.html" %}
+
+{% block content %}
+<div class="row mb-3 justify-content-between align-items-center">
+    {% block list_controls %}
+    {% endblock list_controls %}
+</div>
+
+<table class="table table-hover">
+    <thead>
+        {% block list_head_row %}
+        {% endblock list_head_row %}
+    </thead>
+
+    <tbody>
+        {% block list_body %}
+        {% endblock list_body %}
+    </tbody>
+</table>
+{% endblock content %}

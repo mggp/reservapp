@@ -13,7 +13,7 @@
 
     <nav class="navbar navbar-expand-md navbar-light bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand align-text-top" href="#">
+            <a class="navbar-brand align-text-top" href="/">
                 <span class="d-inline-block align-text-top bi-calendar-heart"/>
                 Reservapp
             </a>
@@ -24,10 +24,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% block navbar_list %}
                     <li class="nav-item">
-                        <a class="nav-link {% if "Booking" == nav_item_selected %}active{% endif %}" href="#">Reservas</a>
+                        <a class="nav-link {% if "Booking" == nav_item_selected %}active{% endif %}" href="/">Reservas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if "Room" == nav_item_selected %}active{% endif %}" href="#">Habitaciones</a>
+                        <a class="nav-link {% if "Room" == nav_item_selected %}active{% endif %}" href="rooms/">Habitaciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if "RoomType" == nav_item_selected %}active{% endif %}" href="#">Tipo de habitaciones</a>

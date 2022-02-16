@@ -28,3 +28,13 @@ class BookingListView(generic.ListView):
 def search_for_available_rooms(request): # TODO: This name is not quite right, change it
     pass
 
+class RoomListView(generic.ListView):
+    model = Room
+
+    def get_queryset(self):
+        return Room.objects.all()
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        ctxt['nav_item_selected'] = 'Room'
+        return ctxt

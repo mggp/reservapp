@@ -1,0 +1,52 @@
+{% extends "bookings/list.html" %}
+
+{% block list_controls %}
+<form class="col-12">
+    <div class="row justify-content-between">
+        <div class="col-2">
+            <input type="number" class="form-control" placeholder="Pasajeros">
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6">
+                    <div class="input-group">
+                        <span class="input-group-text mr-2">Entrada</span>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <span class="input-group-text mr-2">Salida</span>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 justify-content-start order-first">
+            <button type="button" class="btn btn-primary">
+                Buscar disponibilidad
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock list_controls %}
+
+{% block list_head_row %}
+<tr>
+    <th scope="col" class="text-start">Habitación</th>
+    <th scope="col" class="text-center">Capacidad</th>
+    <th scope="col" class="text-center">Precio por noche</th>
+    <th scope="col-1" class="text-end">a</th> {% comment %} columna para acciones {% endcomment %}
+</tr>
+{% endblock list_head_row %}
+
+{% block list_body %}
+    <tr>
+        {% for room in room_list %}
+        <td class="text-start">{{room.name}}</td>
+        <td class="text-center">{{room.room_type.capacity}}</td>
+        <td class="text-center">{{room.room_type.daily_rate}}</td>
+        <td class="text-end"><span class="d-inline-block bi-arrow-right-square-fill text-success"/></td>
+        {% endfor %}
+    </tr>
+{% endblock list_body %}
