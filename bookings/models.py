@@ -1,30 +1,24 @@
 from django.db import models
 import json
 
-class ContactDetails:
+class ContactDetails(dict):
     NAME = 'name'
     EMAIL_ADDRESS = 'email_address'
     PHONE_NUMBER = 'phone_number'
     
     CONTACT_FIELDS = (NAME, EMAIL_ADDRESS, PHONE_NUMBER)
     
-    def __init__(self, args_dict):
+    def __init__(self, **kwargs):
         for key in self.CONTACT_FIELDS:
             try:
-                self[key] = str(args_dict[key])
+                self[key] = str(kwargs[key])
             except:
-                # Does it ever raise an exception?
-                print('Error processing field '+ key +' for ContactDetails')
+                self[key] = None
 
 class ContactDetailsField(models.TextField):
     name = models.CharField(max_length = 255, blank = True)
     email_address = models.EmailField(blank = True)    
-    phone_number = models.CharField(max_length = 255, blank = True)
-
-    def deserialize(obj_as_text) -> ContactDetails:
-        obj_as_dict = json.loads(obj_as_text)
-
-        return ContactDetails(obj_as_dict)     
+    phone_number = models.CharField(max_length = 255, blank = True)  
 
     def to_python(self, value):
         if value is None:
@@ -33,13 +27,16 @@ class ContactDetailsField(models.TextField):
         if isinstance(value, ContactDetails):
             return value
 
-        return self.deserialize(value)
+        return ContactDetails(**json.loads(value))
 
-    def from_db_value(self, value, expression, connection):
-        self.to_python(value)
+    def get_prep_value(self, value):
+        return json.dumps(value)
 
-    # TODO: Make serializer
+    def value_to_string(self, obj) -> str:
+        return json.dumps(obj)
 
+
+# TODO: implement __str__
 class RoomType(models.Model):
     capacity = models.PositiveSmallIntegerField()
     daily_rate = models.DecimalField(decimal_places = 2, max_digits = 20)
