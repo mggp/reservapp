@@ -30,7 +30,7 @@
                         <a class="nav-link {% if "Room" == nav_item_selected %}active{% endif %}" href="{% url 'room_list' %}">Habitaciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if "RoomType" == nav_item_selected %}active{% endif %}" href="#">Tipo de habitaciones</a>
+                        <a class="nav-link {% if "RoomType" == nav_item_selected %}active{% endif %}" href="{% url 'room_type_list' %}">Tipo de habitaciones</a>
                     </li>
                     {% endblock navbar_list %}
                 </ul>

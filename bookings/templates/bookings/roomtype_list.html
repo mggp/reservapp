@@ -1,0 +1,58 @@
+{% extends "bookings/list.html" %}
+
+{% block list_controls %}
+<form class="col-12" action="{% url 'room_type_list' %}" method="GET">
+    <div class="row justify-content-between">
+        <div class="col-2">
+            <input name="guest_count" min="0" type="number" {% if guest_count %} value={{guest_count}} {% endif %} class="form-control" placeholder="Pasajeros">
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6">
+                    <div class="input-group">
+                        <span class="input-group-text mr-2">Entrada</span>
+                        <input name="start_date" type="date" {% if start_date %} value={{start_date}} {% endif %} class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <span class="input-group-text mr-2">Salida</span>
+                        <input name="end_date" type="date" {% if end_date %} value={{end_date}} {% endif %} class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 justify-content-start order-first">
+            <button type="submit" class="btn btn-primary">
+                Buscar disponibilidad
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock list_controls %}
+
+{% block list_head_row %}
+<tr>
+    <th scope="col" class="text-start">Tipo habitación</th>
+    <th scope="col" class="text-center">Capacidad</th>
+    <th scope="col" class="text-center">Cantidad disponible</th>
+    <th scope="col" class="text-center">Precio reserva</th>
+    <th scope="col-1" class="text-end"></th> {% comment %} columna para acciones {% endcomment %}
+</tr>
+{% endblock list_head_row %}
+
+{% block list_body %}
+{% for room_type in roomtype_list %}
+<tr>
+    <td class="text-start">{{room_type.name}}</td>
+    <td class="text-center">{{room_type.capacity}}</td>
+    <td class="text-center">{{room_type.available_count}}</td>
+    <td class="text-center">{{room_type.booking_price}}</td>
+    <td class="text-end">
+        <a class="navbar-brand align-text-top" href="{% url 'new_booking' room_type.id %}?start_date={{start_date}}&end_date={{end_date}}">
+            <span class="d-inline-block bi-arrow-right-square-fill text-success"/>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock list_body %}

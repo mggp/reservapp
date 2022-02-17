@@ -5,7 +5,7 @@ from .models import Booking, Room, RoomType
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from .forms import BookingForm
-from .services import BookingService
+from .services import BookingService, RoomService, RoomTypeService
 
 class BookingDetailsView(generic.DetailView):
     model = Booking
@@ -30,6 +30,41 @@ class RoomListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctxt = super().get_context_data(**kwargs)
         ctxt['nav_item_selected'] = 'Room'
+        return ctxt
+
+class RoomTypeListView(generic.ListView):
+    model = RoomType
+
+    def get_queryset(self):
+        params = self.request.GET
+        
+        capacity = params.get('guest_count', 0)
+        try:
+            capacity = int(capacity)
+        except:
+            capacity = 0
+
+        return RoomType.objects.filter(capacity__gte = capacity)
+
+    def get_context_data(self, **kwargs):
+        ctxt = super().get_context_data(**kwargs)
+        
+        start_date = self.request.GET.get('start_date', None)
+        end_date = self.request.GET.get('end_date', None)
+
+        ctxt['nav_item_selected'] = 'RoomType'
+        ctxt['guest_count'] = self.request.GET.get('guest_count', None)
+        ctxt['start_date'] = start_date
+        ctxt['end_date'] = end_date
+        ctxt['test'] = {'attr':'funciona', 'attr2':'re funciona'}
+
+        if not start_date is None and not end_date is None:
+            room_set = RoomService.GetAvailableRoomsForDateRange(start_date = start_date, end_date = end_date)
+        
+        ctxt['roomtype_list'] = RoomTypeService.ComputeRoomTypeBookingPriceForDateRange(ctxt['roomtype_list'].values(), start_date = start_date, end_date = end_date)
+
+        print(ctxt['roomtype_list'])
+
         return ctxt
 
 @require_http_methods(["GET", "POST"])
