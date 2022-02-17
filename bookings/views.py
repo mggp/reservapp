@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.urls import reverse
 from .models import Booking, Room, RoomType
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from .forms import BookingForm
 from .services import BookingService
 
@@ -58,6 +59,6 @@ def new_booking(request, room_id):
             'room': room,
             'price': price,
             'form': form, 
-            'form_action': 'POST'})
+            'form_action': reverse('new_booking', args={room_id})})
     elif request.method == "POST":
-        pass
+        return HttpResponseRedirect(reverse('booking_list'))

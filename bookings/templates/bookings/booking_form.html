@@ -1,57 +1,57 @@
 {% extends "bookings/form.html" %}
 
 {% block form_content %}
-<form>
-    <div class="row">
-        <div class="col-6">
+<form class="text-center">
+    <div class="row gy-2 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.start_date.id_for_label }}">Entrada</span>
                 {{ form.start_date }}
             </div>
         </div>
-        <div class="col-6">
+    </div>
+    <div class="row gy-2 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.end_date.id_for_label }}">Salida</span>
                 {{ form.end_date }}
             </div>
         </div>
     </div>
-    <div class="row gy-2">
-        <div class="col-6">
+    <div class="row gy-3 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.guest_count.id_for_label }}">Pasajeros</span>
                 {{ form.guest_count }}
             </div>
         </div>
-        <div class="col-6">
+    </div>
+    <div class="row gy-3 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.room.id_for_label }}">Habitación</span>
                 <input type="text" class="form-control text-end" disabled value="{{room}}">
             </div>
         </div>
     </div>
-    <div class="row gy-2">
-        <div class="col-6">
-            <div class="input-group fieldWrapper">
-                <span class="input-group-text mr-2" for="{{ form.contact_info.id_for_label }}">Nombre</span>
-                {{form.contact_info}}
-            </div>
-            <div class="input-group fieldWrapper">
-                <span class="input-group-text mr-2" for="{{ form.contact_info.id_for_label }}">Correo electrónico</span>
-                {{form.contact_info}}
-            </div>
-            <div class="input-group fieldWrapper">
-                <span class="input-group-text mr-2" for="{{ form.contact_info.id_for_label }}">Teléfono</span>
-                {{form.contact_info}}
-            </div>
+    <div class="row gy-3 justify-content-center">
+        <div class="col">
+            {{ form.contact_info }}
         </div>
     </div>
-    <div class="row gy-2">
-        <div class="col-6">
+    <div class="row gy-3 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.price.id_for_label }}">Precio</span>
                 <input type="text" class="form-control text-end" disabled value="{{price}}">
             </div>
+        </div>
+    </div>
+    <div class="row gy-3 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 text-center">
+            <button type="submit" class="btn btn-primary w-50">
+                Crear reserva
+            </button>
         </div>
     </div>
 </form>
