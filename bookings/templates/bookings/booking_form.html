@@ -30,7 +30,11 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.room.id_for_label }}">Habitación</span>
-                <input type="text" class="form-control text-end" disabled value="{{room}}">
+                <select class="form-select text-end" name="room_id">
+                    {% for room in available_rooms %}
+                    <option class="text-end" value="{{room.id}}">{{room.name}}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
     </div>

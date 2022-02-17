@@ -68,32 +68,32 @@ class RoomTypeListView(generic.ListView):
         return ctxt
 
 @require_http_methods(["GET", "POST"])
-def new_booking(request, room_id):
+def new_booking(request, room_type_id):
     if request.method == "GET":
         query_params = request.GET
 
         if not "start_date" in query_params or not "end_date" in query_params:
             return HttpResponseBadRequest("Se requiere fecha de check-in y check-out para crear reserva")
 
-        room = get_object_or_404(Room, pk = room_id)
+        room_type = get_object_or_404(RoomType, pk = room_type_id)
         
-        guest_count = query_params.get('guest_count', default = room.room_type.capacity)
+        guest_count = query_params.get('guest_count', default = room_type.capacity)
         start_date = query_params.get('start_date')
         end_date = query_params.get('end_date')
 
         try:
-            price = BookingService.ComputePriceForDatesAndRoom(start_date, end_date, room)
+            price = BookingService.ComputePriceForDatesAndRoomType(start_date, end_date, room_type)
         except ValueError as e:
             return HttpResponseBadRequest("No se pudo calcular el precio para la reserva. "+ str(e))
 
-        proto_booking = Booking(start_date = start_date, end_date = end_date, room = room, guest_count = guest_count, price = price)
+        proto_booking = Booking(start_date = start_date, end_date = end_date, guest_count = guest_count, price = price)
         form = BookingForm(request.GET, instance = proto_booking)
 
         return render(request, "bookings/booking_form.html", {
             'nav_item_selected': None,
-            'room': room,
             'price': price,
+            'available_rooms': RoomService.GetAvailableRoomsOfRoomTypeForDateRange(start_date, end_date, room_type),
             'form': form, 
-            'form_action': reverse('new_booking', args={room_id})})
+            'form_action': reverse('new_booking', args={room_type_id})})
     elif request.method == "POST":
         return HttpResponseRedirect(reverse('booking_list'))

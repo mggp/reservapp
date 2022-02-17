@@ -5,7 +5,7 @@ import datetime
 
 class BookingService:
     
-    def ComputePriceForDatesAndRoom(start_date, end_date, room):
+    def ComputePriceForDatesAndRoomType(start_date, end_date, room_type):
         
         if not settings.BOOKING_MAX_DATE is None:
             last_possible_date = datetime.datetime.strptime(settings.BOOKING_MAX_DATE, '%Y-%m-%d')
@@ -23,27 +23,43 @@ class BookingService:
             raise ValueError(last_possible_date.strftime('La fecha de salida tiene que ser anterior a %Y-%m-%d'))
         
         stay = end_date - start_date
-        return room.room_type.daily_rate * stay.days
+        return room_type.daily_rate * stay.days
 
 class RoomService:
 
-    def GetAvailableRoomsForDateRange(start_date, end_date, capacity=0):
-        capacity_query = {'room_type__capacity__gte': capacity}
-
+    def GetAvailableRoomsForDateRange(start_date, end_date, *args):
         # Bookings that start before query range and end after range start
-        checkin_unavailable_query = {'booking__start_date__lte': start_date, 'booking__end_date__gte': start_date}
+        checkin_unavailable_query = {'booking__start_date__lte': start_date, 'booking__end_date__gt': start_date}
         # Bookings that start after query range and before range end
-        checkout_unavailable_query = {'booking__start_date__gte': start_date, 'booking__start_date__lte': end_date}
+        checkout_unavailable_query = {'booking__start_date__gte': start_date, 'booking__start_date__lt': end_date}
         
-        available_rooms_query = Q(**capacity_query) & ~Q(**checkin_unavailable_query) & ~Q(**checkout_unavailable_query)
+        available_rooms_query = ~Q(**checkin_unavailable_query) & ~Q(**checkout_unavailable_query)
+
+        extra_queries = Q()
+        for a in args:
+            if isinstance(a, Q):
+                extra_queries = a & extra_queries
         
         try:
             datetime.datetime.strptime(start_date,"%Y-%m-%d")
             datetime.datetime.strptime(end_date,"%Y-%m-%d")    
 
-            return Room.objects.filter(available_rooms_query)
+            return Room.objects.filter(available_rooms_query & extra_queries)
         except:
-            return Room.objects.filter(**capacity_query)
+            return Room.objects.filter(extra_queries)
+
+    def GetAvailableRoomsOfRoomTypeForDateRange(start_date, end_date, room_type):
+        room_type_query = {'room_type__id': room_type.id}
+        
+        return RoomService.GetAvailableRoomsForDateRange(start_date, end_date, Q(**room_type_query))
+
+
+    def GetAvailableRoomsForDateRangeAndMinimumRoomTypeCapacity(start_date, end_date, capacity=0):
+        capacity_query = {'room_type__capacity__gte': capacity}
+        
+        return RoomService.GetAvailableRoomsForDateRange(start_date, end_date, Q(**capacity_query))
+
+        
 
 class RoomTypeService:
 
