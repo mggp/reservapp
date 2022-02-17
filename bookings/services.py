@@ -1,6 +1,6 @@
 from .models import Room, RoomType, Booking
 from django.conf import settings
-from django.db.models import Q, F
+from django.db.models import Q
 import datetime
 
 class BookingService:
@@ -35,13 +35,13 @@ class RoomService:
         # Bookings that start after query range and before range end
         checkout_unavailable_query = {'booking__start_date__gte': start_date, 'booking__start_date__lte': end_date}
         
-        available_rooms_query = Q(capacity_query) & ~(Q(checkin_unavailable_query) | Q(checkout_unavailable_query))
+        available_rooms_query = Q(**capacity_query) & ~Q(**checkin_unavailable_query) & ~Q(**checkout_unavailable_query)
         
         try:
             datetime.datetime.strptime(start_date,"%Y-%m-%d")
             datetime.datetime.strptime(end_date,"%Y-%m-%d")    
 
-            return Room.objects.filter(Q(available_rooms_query))
+            return Room.objects.filter(available_rooms_query)
         except:
             return Room.objects.filter(**capacity_query)
 
@@ -64,5 +64,11 @@ class RoomTypeService:
 
         return room_types
 
-    def GetRoomTypesQuerySetFromRoomsQueryset(rooms):
-        pass
+    def ComputeRoomTypeAvailableCountFromAvailableRoomQuerySet(room_types, rooms = None):
+        if rooms is None:
+            rooms = Room.objects.all()
+        
+        for rt in room_types:
+            rt['available_count'] = rooms.filter(room_type__id = rt['id']).count()
+
+        return room_types

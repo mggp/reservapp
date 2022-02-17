@@ -58,12 +58,12 @@ class RoomTypeListView(generic.ListView):
         ctxt['end_date'] = end_date
         ctxt['test'] = {'attr':'funciona', 'attr2':'re funciona'}
 
+        room_set = None
         if not start_date is None and not end_date is None:
             room_set = RoomService.GetAvailableRoomsForDateRange(start_date = start_date, end_date = end_date)
         
         ctxt['roomtype_list'] = RoomTypeService.ComputeRoomTypeBookingPriceForDateRange(ctxt['roomtype_list'].values(), start_date = start_date, end_date = end_date)
-
-        print(ctxt['roomtype_list'])
+        ctxt['roomtype_list'] = RoomTypeService.ComputeRoomTypeAvailableCountFromAvailableRoomQuerySet(ctxt['roomtype_list'], room_set)
 
         return ctxt
 
