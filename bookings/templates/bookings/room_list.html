@@ -36,17 +36,24 @@
     <th scope="col" class="text-start">Habitación</th>
     <th scope="col" class="text-center">Capacidad</th>
     <th scope="col" class="text-center">Precio por noche</th>
-    <th scope="col-1" class="text-end">a</th> {% comment %} columna para acciones {% endcomment %}
+    <th scope="col-1" class="text-end"></th> {% comment %} columna para acciones {% endcomment %}
 </tr>
 {% endblock list_head_row %}
 
 {% block list_body %}
-    <tr>
-        {% for room in room_list %}
-        <td class="text-start">{{room.name}}</td>
-        <td class="text-center">{{room.room_type.capacity}}</td>
-        <td class="text-center">{{room.room_type.daily_rate}}</td>
-        <td class="text-end"><span class="d-inline-block bi-arrow-right-square-fill text-success"/></td>
-        {% endfor %}
-    </tr>
+{% for room in room_list %}
+<tr>
+    <td class="text-start">{{room.name}}</td>
+    <td class="text-center">{{room.room_type.capacity}}</td>
+    <td class="text-center">{{room.room_type.daily_rate}}</td>
+    <td class="text-end">
+        {% comment %} 
+        TODO: remove hard-coded dates
+        {% endcomment %}
+        <a class="navbar-brand align-text-top" href="{% url 'new_booking' room.pk %}?start_date=2022-02-18&end_date=2022-02-20">
+            <span class="d-inline-block bi-arrow-right-square-fill text-success"/>
+        </a>
+    </td>
+</tr>
+{% endfor %}
 {% endblock list_body %}

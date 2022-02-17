@@ -8,9 +8,11 @@
         </div>
     </div>
     <div class="col-6 justify-content-start order-first">
-        <button type="button" class="btn btn-primary">
-            Nueva reserva
-        </button>
+        <a href="{% url 'room_list' %}">
+            <button type="button" class="btn btn-primary">
+                Nueva reserva
+            </button>
+        </a>
     </div>
 {% endblock list_controls %}
 
@@ -26,12 +28,12 @@
 
 
 {% block list_body %}
+{% for booking in booking_list %}
 <tr>
-    {% for booking in booking_list %}
     <td>{{booking.code}}</td>
     <td>{{booking.start_date | date:'d m y' }}</td>
     <td>{{booking.room}}</td>
-    <td>{{booking.contact_info.name}}
-    {% endfor %}
+    <td>{{booking.contact_info.name}}</td>
 </tr>
+{% endfor %}
 {% endblock list_body %}

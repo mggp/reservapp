@@ -73,5 +73,3 @@ class Booking(models.Model):
             self.room.name, 
             "("+str(self.guest_count)+" PAX)", 
             "Check in:", str(self.start_date)))
-
-
