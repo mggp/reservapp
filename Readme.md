@@ -73,3 +73,7 @@ gratuito como pythonanywhere, heroku, etc
 ## Requerimientos
 - Python 3.9.5
 - Django 3.0.14
+
+# Release
+**Última versión**: v0.1.0
+**Instancia de prueba**: https://mggp.pythonanywhere.com/
