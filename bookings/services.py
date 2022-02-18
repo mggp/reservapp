@@ -1,9 +1,12 @@
 from .models import Room, RoomType, Booking
 from django.conf import settings
 from django.db.models import Q
-import datetime
+import datetime, random, string
 
 class BookingService:
+
+    def GenerateCode():
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     
     def ComputePriceForDatesAndRoomType(start_date, end_date, room_type):
         
@@ -16,6 +19,11 @@ class BookingService:
             start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
         if isinstance(end_date, str):
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        
+        if isinstance(start_date, datetime.date):
+            start_date = datetime.datetime.combine(start_date, datetime.datetime.min.time())
+        if isinstance(end_date, datetime.date):
+            end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
 
         if start_date > end_date:
             raise ValueError('La fecha de salida tiene que ser posterior a la de entrada')
@@ -27,7 +35,16 @@ class BookingService:
 
 class RoomService:
 
+    def IsRoomAvailableForDates(room, start_date, end_date):
+        room_query = Q(id=room.id)
+        return RoomService.GetAvailableRoomsForDateRange(start_date, end_date, room_query).count() > 0
+
     def GetAvailableRoomsForDateRange(start_date, end_date, *args):
+        if isinstance(start_date, datetime.date):
+            start_date = start_date.strftime('%Y-%m-%d')
+        if isinstance(end_date, datetime.date):
+            end_date = end_date.strftime('%Y-%m-%d')
+
         # Bookings that start before query range and end after range start
         checkin_unavailable_query = {'booking__start_date__lte': start_date, 'booking__end_date__gt': start_date}
         # Bookings that start after query range and before range end
@@ -52,7 +69,6 @@ class RoomService:
         room_type_query = {'room_type__id': room_type.id}
         
         return RoomService.GetAvailableRoomsForDateRange(start_date, end_date, Q(**room_type_query))
-
 
     def GetAvailableRoomsForDateRangeAndMinimumRoomTypeCapacity(start_date, end_date, capacity=0):
         capacity_query = {'room_type__capacity__gte': capacity}

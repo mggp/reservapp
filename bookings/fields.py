@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from django.forms import MultiWidget, TextInput, EmailInput, MultiValueField, CharField, EmailField
 from django.db import models
 import json
@@ -15,7 +16,7 @@ class ContactDetails(dict):
                 self[key] = str(kwargs[key])
             except:
                 self[key] = None
-
+    
 class ContactDetailsWidget(MultiWidget):
 
     def __init__(self, attrs = None, **kwargs):
@@ -36,6 +37,7 @@ class ContactDetailsWidget(MultiWidget):
             if widget['value'] is None:
                 widget['value'] = ''
             widget['label'] = LABELS[count]
+            widget['input_name'] = ContactDetails.CONTACT_FIELDS[count]
         
         return proto_context
     
@@ -55,14 +57,14 @@ class ContactDetailsWidget(MultiWidget):
 class ContactDetailsField(MultiValueField):
     def __init__(self, **kwargs):
         fields = (
-            CharField(required = False, label = 'Name'),
-            EmailField(required = False, label = 'Email address'),
-            CharField(required = False, label = 'Phone number'),            
+            CharField(required = True, label = 'Name'),
+            EmailField(required = True, label = 'Email address'),
+            CharField(required = True, label = 'Phone number'),            
         )
         kwargs['widget'] = ContactDetailsWidget
         kwargs['fields'] = fields
         kwargs.pop('max_length', None)
-        super().__init__(require_all_fields = False, **kwargs)
+        super().__init__(require_all_fields = True, **kwargs)
 
     def compress(self, data_list):
         return json.dumps({'name': data_list[0], 'email_address': data_list[1], 'phone_number': data_list[2]})

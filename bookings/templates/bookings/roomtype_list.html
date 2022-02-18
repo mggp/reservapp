@@ -49,7 +49,7 @@
     <td class="text-center">{{room_type.available_count}}</td>
     <td class="text-center">{{room_type.booking_price}}</td>
     <td class="text-end">
-        {% if start_date and end_date %}
+        {% if start_date and end_date and room_type.available_count > 0%}
         <a class="navbar-brand align-text-top" href="{% url 'new_booking' room_type.id %}?start_date={{start_date}}&end_date={{end_date}}">
             <span class="d-inline-block bi-arrow-right-square-fill text-success"/>
         </a>

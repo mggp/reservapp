@@ -92,8 +92,38 @@ def new_booking(request, room_type_id):
         return render(request, "bookings/booking_form.html", {
             'nav_item_selected': None,
             'price': price,
+            'maximum_room_capacity': room_type.capacity,
             'available_rooms': RoomService.GetAvailableRoomsOfRoomTypeForDateRange(start_date, end_date, room_type),
             'form': form, 
             'form_action': reverse('new_booking', args={room_type_id})})
     elif request.method == "POST":
-        return HttpResponseRedirect(reverse('booking_list'))
+        params = request.POST
+        
+        form = BookingForm(params)
+        try:
+            room_id = int(params.get('room_id'))
+        except:
+            return HttpResponseBadRequest()
+
+        room_type = get_object_or_404(RoomType, pk = room_type_id)
+        room = get_object_or_404(Room, pk = room_id)
+
+        if room.room_type != room_type:
+            return HttpResponseBadRequest()
+
+        if (form.is_valid()):
+            data = form.cleaned_data
+
+            if data['guest_count'] > room_type.capacity:
+                return HttpResponseBadRequest()
+            if not RoomService.IsRoomAvailableForDates(room, data['start_date'], data['end_date']):
+                return HttpResponseBadRequest()
+
+            price = BookingService.ComputePriceForDatesAndRoomType(data['start_date'], data['end_date'], room_type)
+            code = BookingService.GenerateCode()
+            proto_booking = Booking(room=room, price=price, code=code, **data)
+            proto_booking.save()
+
+            return HttpResponseRedirect(reverse('booking_list'))
+        else:
+            return HttpResponseBadRequest(form.errors.as_json())

@@ -6,7 +6,7 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.start_date.id_for_label }}">Entrada</span>
-                {{ form.start_date }}
+                <input type="date" class="form-control text-end" readonly name="start_date" value="{{ form.start_date.value }}">
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.end_date.id_for_label }}">Salida</span>
-                {{ form.end_date }}
+                <input type="date" class="form-control text-end" readonly name="end_date" value="{{ form.end_date.value }}">
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.guest_count.id_for_label }}">Pasajeros</span>
-                {{ form.guest_count }}
+                <input type="number" required class="form-control text-end" min="1" max="{{maximum_room_capacity}}" name="guest_count" value="{{ form.guest_count.value }}">
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@
         <div class="col-12 col-md-8 col-lg-6">
             <div class="input-group fieldWrapper">
                 <span class="input-group-text mr-2" for="{{ form.price.id_for_label }}">Precio</span>
-                <input type="text" class="form-control text-end" disabled value="{{price}}">
+                <input type="text" class="form-control text-end" readonly value="{{price}}">
             </div>
         </div>
     </div>

@@ -1,14 +1,8 @@
 {% extends "bookings/list.html" %}
 
 {% block list_controls %}
-    <div class="col-6 col-md-3">
-        <div class="input-group">
-            <span class="input-group-text bi-search mr-2 "></span>
-            <input type="text" class="form-control" placeholder="Buscar...">
-        </div>
-    </div>
     <div class="col-6 justify-content-start order-first">
-        <a href="{% url 'room_list' %}">
+        <a href="{% url 'room_type_list' %}">
             <button type="button" class="btn btn-primary">
                 Nueva reserva
             </button>
@@ -20,9 +14,10 @@
 <tr class="justify-content-between">
     <th scope="col">Localizador</th>
     <th scope="col">Check-in</th>
+    <th scope="col">Check-out</th>
     <th scope="col">Habitación</th>
-    <th scope="col">Datos de contacto</th>
-    <th scope="col"></th> {% comment %} This is the actions column {% endcomment %}
+    <th scope="col">N° pasajeros</th>
+    <th scope="col">Precio</th>
 </tr>
 {% endblock list_head_row %}
 
@@ -31,9 +26,11 @@
 {% for booking in booking_list %}
 <tr>
     <td>{{booking.code}}</td>
-    <td>{{booking.start_date | date:'d m y' }}</td>
+    <td>{{booking.start_date | date:'d/m/y' }}</td>
+    <td>{{booking.end_date | date:'d/m/y' }}</td>
     <td>{{booking.room}}</td>
-    <td>{{booking.contact_info.name}}</td>
+    <td>{{booking.guest_count}}</td>
+    <td>{{booking.price}}</td>
 </tr>
 {% endfor %}
 {% endblock list_body %}
