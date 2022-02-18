@@ -71,6 +71,7 @@ class RoomTypeListView(generic.ListView):
 def new_booking(request, room_type_id):
     if request.method == "GET":
         query_params = request.GET
+        # TODO: Tidy responses and error handling
 
         if not "start_date" in query_params or not "end_date" in query_params:
             return HttpResponseBadRequest("Se requiere fecha de check-in y check-out para crear reserva")
